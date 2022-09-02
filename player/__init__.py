@@ -95,8 +95,9 @@ class Player(pygame.sprite.Sprite):
 
     def jump(self):
         if self.status != "jump" and not self.jump_status:
-            self.rect.y += -10
+            self.rect.y += -1
             self.vel.y = -5
+            self.acc.y = self.env.gravity
             self.status = "jump"
             self.jump_status = True
             self.frame_point = 0
@@ -122,35 +123,44 @@ class Player(pygame.sprite.Sprite):
         else:
             pass
 
-    def update(self, *args: Any, **kwargs: Any) -> None:
+    def check_gravity(self):
         ret = pygame.sprite.spritecollide(self, self.env.grounds, False)
         if ret:
-            for r in ret:
-                if abs(r.rect.midtop[1] - self.rect.midbottom[1]) <= self.stair_threshold:
-                    self.acc.y = 0
-                    self.vel.y = 0
-                    self.rect.midbottom = (self.rect.midbottom[0], r.rect.midtop[1] + 1)
-                else:
-                    # Right collide
-                    if r.rect.midright[0] > self.rect.midright[0] >= r.rect.midleft[0]:
-                        if self.acc.x > 0:
-                            self.acc.x = 0
-                        if self.vel.x > 0:
-                            self.vel.x = 0
-                    # Left collide
-                    elif r.rect.midleft[0] < self.rect.midleft[0] <= r.rect.midright[0]:
-                        if self.acc.x < 0:
-                            self.acc.x = 0
-                        if self.vel.x < 0:
-                            self.vel.x = 0
+            pass
+        # In the space
         else:
-            self.acc.y = self.env.gravity
+            pass
 
-        self.vel += self.acc
-        self.rect.x += self.vel.x
-        self.rect.y += self.vel.y
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        # ret = pygame.sprite.spritecollide(self, self.env.grounds, False)
+        # if ret:
+        #     for r in ret:
+        #         if abs(r.rect.midtop[1] - self.rect.midbottom[1]) <= self.stair_threshold:
+        #             self.acc.y = 0
+        #             self.vel.y = 0
+        #             self.rect.midbottom = (self.rect.midbottom[0], r.rect.midtop[1] + 1)
+        #         else:
+        #             # Right collide
+        #             if r.rect.midright[0] > self.rect.midright[0] >= r.rect.midleft[0]:
+        #                 if self.acc.x > 0:
+        #                     self.acc.x = 0
+        #                 if self.vel.x > 0:
+        #                     self.vel.x = 0
+        #             # Left collide
+        #             elif r.rect.midleft[0] < self.rect.midleft[0] <= r.rect.midright[0]:
+        #                 if self.acc.x < 0:
+        #                     self.acc.x = 0
+        #                 if self.vel.x < 0:
+        #                     self.vel.x = 0
+        # else:
+        #     self.acc.y = self.env.gravity
+        #
+        # self.vel += self.acc
+        # self.rect.x += self.vel.x
+        # self.rect.y += self.vel.y
 
         if self.status == "originate":
+            ret = pygame.sprite.spritecollide(self, self.env.grounds, False)
             if ret:
                 self.status = "stand"
             else:
@@ -182,7 +192,6 @@ if __name__ == "__main__":
         displaysurface.fill((0, 0, 0), (0, 0, WIDTH, HEIGHT))
         env.update()
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
                 key = pygame.key.get_pressed()
                 if key[pygame.K_k]:
                     p1.jump()

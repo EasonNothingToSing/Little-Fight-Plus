@@ -231,14 +231,13 @@ if __name__ == "__main__":
         displaysurface.fill((0, 0, 0), (0, 0, WIDTH, HEIGHT))
         env.update()
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                key = pygame.key.get_pressed()
-                if key[pygame.K_k]:
-                    p1.jump()
-                if key[pygame.K_a]:
-                    p1.move(True)
-                if key[pygame.K_d]:
-                    p1.move(False)
+            key = pygame.key.get_pressed()
+            if key[pygame.K_k]:
+                p1.jump()
+            if key[pygame.K_a]:
+                p1.move(True)
+            if key[pygame.K_d]:
+                p1.move(False)
         p1.update()
         pygame.display.update()
         FPS_CLOCK.tick(FPS)
